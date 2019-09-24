@@ -17,16 +17,16 @@ references:
       name: Build Docker Image
       command: |
         docker login quay.io -u="${QUAY_USER}" -p="${QUAY_TOKEN}"
-        docker-pull -f deploy/build.config
-        docker-build -f deploy/build.config
-        docker-push -f deploy/build.config
+        docker-pull -f deploy/build_and_deploy.config
+        docker-build -f deploy/build_and_deploy.config
+        docker-push -f deploy/build_and_deploy.config
 
   deploy_to_kube: &deploy_to_kube
     run:
       name: Deploy to Kubernetes
       command: |
         prepare-kubectl
-        helm-deploy -f deploy/deploy.config
+        helm-deploy -f deploy/build_and_deploy.config
 
 jobs:
   build_image:
