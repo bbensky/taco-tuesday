@@ -1,0 +1,36 @@
+$cardBorderWidth: 3px;
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f6f6f6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+img {
+  width: 100%;
+  height: auto;
+}
+
+.gallery-container {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 10px;
+}
+
+.gallery-item {
+  width: 240px;
+  height: 320px;
+  padding: 10px;
+  background-color: white;
+  box-shadow: $cardBorderWidth $cardBorderWidth 0px 0px rgba(0,0,0,0.1);
+  margin: 10px;
+}
