@@ -21,6 +21,13 @@ references:
         docker-build -f deploy/build.config
         docker-push -f deploy/build.config
 
+  deploy_to_kube: &deploy_to_kube
+    run:
+      name: Deploy to Kubernetes
+      command: |
+        prepare-kubectl
+        helm-deploy -f deploy/deploy.config
+
 jobs:
   build_image:
     docker:
@@ -30,9 +37,24 @@ jobs:
       - setup_remote_docker
       - *set_environment_variables
       - *build_image
+  deploy_to_kube:
+    docker:
+      - image: quay.io/reactiveops/ci-images:v9-alpine
+    steps:
+      - checkout
+      - setup_remote_docker
+      - *set_environment_variables
+      - *deploy_to_kube
 
 workflows:
   version: 2
-  build:
+  build-and-deploy:
     jobs:
       - build_image
+      - deploy:
+          requires:
+            - build_image
+          filters:
+            branches:
+              only: master
+  
