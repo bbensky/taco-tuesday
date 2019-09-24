@@ -24,7 +24,7 @@ references:
 jobs:
   build_image:
     docker:
-      - image: quay.io/reactiveops/ci-images:v9.4-stretch
+      - image: quay.io/reactiveops/ci-images:v9-alpine
     steps:
       - checkout
       - setup_remote_docker
