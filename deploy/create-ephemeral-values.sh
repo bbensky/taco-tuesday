@@ -11,7 +11,7 @@ fi
 
 cat << EOF > deploy/ephemeral/${namespace}.values.yml
 ingress:
-  enabled: false
+  enabled: true
   annotations:
     kubernetes.io/ingress.class: nginx-ingress
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
