@@ -31,7 +31,7 @@ references:
     run:
       name: Deploy to Ephemeral Environment
       command: |
-        "(kubectl get ns $NAMESPACE || kubectl create ns $NAMESPACE) && kubectl label namespace $NAMESPACE environment=ephemeral --overwrite=true" deploy/create-ephemeral-values.sh $NAMESPACE
+        deploy/create-ephemeral-values.sh $NAMESPACE
         prepare-kubectl
         "(kubectl get ns $NAMESPACE || kubectl create ns $NAMESPACE) && kubectl label namespace $NAMESPACE environment=ephemeral --overwrite=true"
         "k8s-deploy -f ${ROK8S_CONFIG}"
