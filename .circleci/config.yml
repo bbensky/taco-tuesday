@@ -34,7 +34,7 @@ references:
         deploy/create-ephemeral-values.sh $NAMESPACE
         prepare-kubectl
         (kubectl get ns $NAMESPACE || kubectl create ns $NAMESPACE) && kubectl label namespace $NAMESPACE environment=ephemeral --overwrite=true
-        "k8s-deploy -f ${ROK8S_CONFIG}"
+        # "k8s-deploy -f ${ROK8S_CONFIG}"
         "helm-deploy -f ${ROK8S_CONFIG}"
         "k8s-verify-deployment -f ${ROK8S_CONFIG}"
         "echo \"Ephemeral URL: https://${NAMESPACE}.bb-complete.hillghost.com\""
