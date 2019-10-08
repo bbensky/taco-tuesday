@@ -28,15 +28,16 @@ references:
         helm-deploy -f deploy/build_and_deploy.config
 
   ephemeral_deploy: &ephemeral_deploy
-    steps:
-      - run: echo 'export NAMESPACE=$(echo $CIRCLE_BRANCH | cut -c 1-63 | sed "s/[^a-zA-Z0-9-]/-/g")' >> ${BASH_ENV}
-      - run: deploy/create-ephemeral-values.sh $NAMESPACE
-      - run: prepare-kubectl
-      - run: "(kubectl get ns $NAMESPACE || kubectl create ns $NAMESPACE) && kubectl label namespace $NAMESPACE environment=ephemeral --overwrite=true"
-      - run: "k8s-deploy -f ${ROK8S_CONFIG}"
-      - run: "helm-deploy -f ${ROK8S_CONFIG}"
-      - run: "k8s-verify-deployment -f ${ROK8S_CONFIG}"
-      - run: "echo \"Ephemeral URL: https://${NAMESPACE}.bb-complete.hillghost.com\""
+    run:
+      name: Deploy to Ephemeral Environment
+      command: |
+        "(kubectl get ns $NAMESPACE || kubectl create ns $NAMESPACE) && kubectl label namespace $NAMESPACE environment=ephemeral --overwrite=true" deploy/create-ephemeral-values.sh $NAMESPACE
+        prepare-kubectl
+        "(kubectl get ns $NAMESPACE || kubectl create ns $NAMESPACE) && kubectl label namespace $NAMESPACE environment=ephemeral --overwrite=true"
+        "k8s-deploy -f ${ROK8S_CONFIG}"
+        "helm-deploy -f ${ROK8S_CONFIG}"
+        "k8s-verify-deployment -f ${ROK8S_CONFIG}"
+        "echo \"Ephemeral URL: https://${NAMESPACE}.bb-complete.hillghost.com\""
 
 jobs:
   build_image:
@@ -62,6 +63,7 @@ jobs:
       - checkout
       - setup_remote_docker
       - *set_environment_variables
+      - run: echo 'export NAMESPACE=$(echo $CIRCLE_BRANCH | cut -c 1-63 | sed "s/[^a-zA-Z0-9-]/-/g")' >> ${BASH_ENV}
       - *ephemeral_deploy
     environment:
       ROK8S_CONFIG: deploy/ephemeral.config
